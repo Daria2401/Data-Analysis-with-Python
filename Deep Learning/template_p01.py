@@ -22,8 +22,9 @@ def multiplicative_attention(decoder_hidden_state, encoder_hidden_states, W_mult
     return: np.array of shape (n_features_enc, 1)
         Final attention vector
     '''
-    # your code here
-    
+    projected_encoder_states = np.dot(W_mult, encoder_hidden_states)
+    softmax_vector = softmax(np.dot(decoder_hidden_state.T, projected_encoder_states))
+    attention_vector = softmax_vector.dot(encoder_hidden_states.T).T
     return attention_vector
 
 def additive_attention(decoder_hidden_state, encoder_hidden_states, v_add, W_add_enc, W_add_dec):
@@ -37,6 +38,8 @@ def additive_attention(decoder_hidden_state, encoder_hidden_states, v_add, W_add
     return: np.array of shape (n_features_enc, 1)
         Final attention vector
     '''
-    # your code here
-    
+    projected_encoder_states = np.dot(W_add_enc, encoder_hidden_states)
+    projected_decoder_state = np.dot(W_add_dec, decoder_hidden_state)
+    weights_vector = softmax(np.dot(np.tanh(projected_encoder_states.T + projected_decoder_state), v_add.T))
+    attention_vector = weights_vector.dot(encoder_hidden_states.T).T
     return attention_vector
